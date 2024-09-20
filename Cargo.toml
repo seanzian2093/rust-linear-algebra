@@ -1,0 +1,7 @@
+[workspace]
+members = [
+    "vector",
+    "matrix", "demo",
+]
+
+resolver = "2"
