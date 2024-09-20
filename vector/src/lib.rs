@@ -1,14 +1,13 @@
-pub fn add(left: u64, right: u64) -> u64 {
-    left + right
+/// # Vector
+
+pub struct Vector<T> {
+    size: usize,
+    data: Vec<T>,
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
+impl<T> Vector<T> {
+    fn norm(&self) -> f64 {
+        let norm = self.iter;
+        0.0
     }
 }
