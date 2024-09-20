@@ -1,3 +1,4 @@
+use matrix::add;
 use vector::Vector;
 fn main() {
     let size = 3;
@@ -5,9 +6,8 @@ fn main() {
     let v = Vector::new(size, vec);
     println!("{:#?}", v);
 
-    let f = v.to_f64();
-    println!("{:#?}", f);
-
     let n = v.norm();
     println!("{:#?}", n);
+    let sum = add(1, 2);
+    println!("{sum}");
 }
