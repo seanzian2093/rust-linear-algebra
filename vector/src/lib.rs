@@ -1,8 +1,10 @@
+use std::ops::{Add, Sub};
 /// # Vector
 // import tests to here, as if the mod tests was written here
+use util::*;
 mod tests;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Vector<T>
 where
     f64: From<T>,
@@ -50,10 +52,8 @@ where
         let other_data_f64 = other.data_to_f64();
         let self_data_f64 = self.data_to_f64();
 
-        let ed: f64 = self_data_f64
-            .into_iter()
-            .zip(other_data_f64)
-            .map(|(a, b)| (a - b).powi(2))
+        let ed = bi_op_f64(self_data_f64, other_data_f64, BiOpsF64::SubSqF64)
+            .iter()
             .sum::<f64>()
             .sqrt();
 
@@ -61,30 +61,27 @@ where
     }
 }
 
-trait Add {
+// Borrow and operate
+trait BAdd {
     // whatever type B and caller type are, the sum type is Vector<f64>
     // - f64 cannot convert back to some other types easily, losslessly, e.g. i32
     // - we could implement ourself but too tedious.
     // - let user handle from here
     type B;
-    fn add(&self, _: &Self::B) -> Vector<f64>;
+    fn badd(&self, _: &Self::B) -> Vector<f64>;
 }
 
-impl<T> Add for Vector<T>
+impl<T> BAdd for Vector<T>
 where
     f64: From<T>,
     T: Clone,
 {
     type B = Vector<T>;
-    fn add(&self, other: &Vector<T>) -> Vector<f64> {
+    fn badd(&self, other: &Vector<T>) -> Vector<f64> {
         let other_data_f64 = other.data_to_f64();
         let self_data_f64 = self.data_to_f64();
 
-        let data: Vec<f64> = self_data_f64
-            .into_iter()
-            .zip(other_data_f64)
-            .map(|(a, b)| (a + b))
-            .collect();
+        let data = bi_op_f64(self_data_f64, other_data_f64, BiOpsF64::AddF64);
 
         // either works - as long as we use turbofish syntax
         // Vector::<f64>::new(self.size, data)
@@ -92,5 +89,22 @@ where
             size: self.size,
             data,
         }
+    }
+}
+
+// implement the Add trait in std::ops
+impl<T: Add<Output = T>> Add for Vector<T>
+where
+    f64: From<T>,
+    T: Clone,
+{
+    type Output = Vector<f64>;
+
+    fn add(self, other: Self) -> Self::Output {
+        let other_data_f64 = other.data_to_f64();
+        let self_data_f64 = self.data_to_f64();
+
+        let data = bi_op_f64(self_data_f64, other_data_f64, BiOpsF64::AddF64);
+        Vector::<f64>::new(self.size, data)
     }
 }

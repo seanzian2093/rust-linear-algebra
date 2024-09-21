@@ -2,7 +2,7 @@
 members = [
     "vector",
     "matrix", 
-    "demo",
+    "demo", "util", 
 ]
 
 resolver = "2"
