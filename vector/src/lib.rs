@@ -10,7 +10,7 @@ where
     f64: From<T>,
     T: Clone,
 {
-    size: usize,
+    size: u32,
     data: Vec<T>,
 }
 
@@ -19,7 +19,14 @@ where
     f64: From<T>,
     T: Clone,
 {
-    pub fn new(size: usize, data: Vec<T>) -> Self {
+    pub fn new(size: u32, data: Vec<T>) -> Self {
+        assert_eq!(
+            size,
+            data.len() as u32,
+            "size and shape do not match - {} vs {:?}",
+            size,
+            data.len() as u32,
+        );
         Vector { size, data }
     }
 
@@ -29,6 +36,7 @@ where
         // let data: Vec<f64> = self.data.iter().map(|e| f64::from(e.clone())).collect();
         data
     }
+
     pub fn norm(&self) -> f64 {
         let norm: f64 = self.data_to_f64().iter().map(|i| i.powf(2.0)).sum();
         norm.sqrt()

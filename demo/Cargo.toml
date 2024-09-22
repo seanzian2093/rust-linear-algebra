@@ -7,3 +7,6 @@ edition = "2021"
 vector = {path = "../vector"}
 matrix = {path = "../matrix"}
 util = {path = "../util"}
+
+[lints.rust]
+unused = "allow"

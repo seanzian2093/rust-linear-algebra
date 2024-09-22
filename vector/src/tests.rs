@@ -4,6 +4,7 @@
 mod tests {
     use crate::{BAdd, EuclideanDistance, Vector};
     use std::ops::Add;
+
     #[test]
     fn test_vector_new() {
         let v = Vector::new(3, vec![1, 2, 3]);
@@ -63,5 +64,11 @@ mod tests {
         // let sum = v1.clone() + v2.clone();
         // println!("{:?}.add({:?}) yields {:?}", v1, v2, sum);
         assert_eq!(sum.size, 3);
+    }
+
+    #[test]
+    #[should_panic]
+    fn test_vector_wrong_input() {
+        let v1: Vector<i8> = Vector::new(3, vec![1, 0, 0, 0]);
     }
 }

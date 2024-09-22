@@ -12,8 +12,12 @@ fn main() {
     println!("{:#?}", n);
 
     // matrix
-    let sum = add(1, 2);
-    println!("{sum}");
+    let data = vec![1, 2, 3, 4, 5, 6];
+    let size = 6;
+    let shape = (3, 2);
+    let m = Matrix::new(size, shape, data);
+
+    println!("{:#?}", m);
 
     // util
     let res = add_f64(1.0, 2.0);
