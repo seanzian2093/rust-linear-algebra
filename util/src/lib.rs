@@ -57,3 +57,14 @@ mod tests {
         assert_eq!(result, tgt);
     }
 }
+
+/// A function converts `Vec<T>` to `Vec<f64>`
+pub fn to_vec_f64<T>(data: &Vec<T>) -> Vec<f64>
+where
+    f64: From<T>,
+    T: Clone,
+{
+    let data: Vec<f64> = data.iter().map(|e| f64::from(e.clone())).collect();
+
+    data
+}

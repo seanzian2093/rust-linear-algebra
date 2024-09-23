@@ -6,7 +6,9 @@ fn main() {
     let size = 3;
     let vec = vec![1, 2, 3];
     let v = Vector::new(size, vec);
-    println!("{:#?}", v);
+    println!("\nIn pretty debug: {:#?}", v);
+    println!("In debug: {:?}", v);
+    println!("In display: {}", v);
 
     let n = v.norm();
     println!("{:#?}", n);
@@ -17,7 +19,9 @@ fn main() {
     let shape = (3, 2);
     let m = Matrix::new(size, shape, data);
 
-    println!("{:#?}", m);
+    println!("\nIn pretty debug: {:#?}", m);
+    println!("In debug: {:?}", m);
+    println!("In display: {}", m);
 
     // util
     let res = add_f64(1.0, 2.0);
