@@ -1,8 +1,9 @@
 // This tests mod is within src so is considered unittest
 #[cfg(test)]
 mod tests {
-    use crate::{Matrix, Vector, AddScalar, MulScalar, SubScalar, DivScalar};
+    use crate::{Matrix, Vector, AddScalar, MulScalar, SubScalar, DivScalar, MatrixProduct};
     use std::ops::{Add, Sub, Mul, Div};
+
     #[test]
     fn test_matrix_new() {
         let data = vec![1, 2, 3, 4, 5, 6];
@@ -182,6 +183,21 @@ mod tests {
             Vector::new(2, vec![1.,4.]),
             Vector::new(2, vec![9.,16.]),
             Vector::new(2, vec![25.,36.]),
+        ];
+
+        assert_eq!(res.get_rows(), tgt);
+    }
+
+    #[test]
+    fn test_matrix_product() {
+        let m = Matrix::new(6, (3,2), vec![1, 2, 3, 4, 5, 6]);
+        let m2 = Matrix::new(6, (2,3), vec![1, 2, 3, 4, 5, 6]);
+
+        let res = m.mat_product(m2);
+        let tgt = vec![
+            Vector::new(3, vec![9., 12., 15.]),
+            Vector::new(3, vec![19., 26., 33.]),
+            Vector::new(3, vec![29., 40., 51.]),
         ];
 
         assert_eq!(res.get_rows(), tgt);

@@ -238,7 +238,7 @@ where
     }
 }
 
-impl<T> DotMul for Vector<T>
+impl<T> VectorProduct for Vector<T>
 where
     f64: From<T>,
     T: Clone,

@@ -260,7 +260,7 @@ where
     }
 }
 
-/// Implement the std::ops::Mul
+/// Implement the std::ops::Mul - entry-wise multiplication
 impl<T: std::ops::Mul<Output = T>> std::ops::Mul for Matrix<T>
 where
     f64: From<T>,
@@ -277,3 +277,29 @@ where
     }
 }
 
+/// Implement the Product trait
+impl<T> MatrixProduct for Matrix<T>
+where
+    f64: From<T>,
+    T: Clone,
+{
+    type Output = Matrix<f64>;
+    fn mat_product(&self, rhs: Self) -> Self::Output {
+        let cond1 = self.shape.0 == rhs.shape.1;
+        let cond2 = self.shape.1 == rhs.shape.0;
+        assert!(cond1 && cond2, "Cannot multiply a matrix of {:?} and a matrix of {:?}", self.shape, rhs.shape);
+
+        let rows = self.get_rows();
+        let cols = rhs.get_columns();
+        let mut data= Vec::new();
+        for row in rows {
+            for col in &cols {
+                data.push(row.dot_mul(col))
+            }
+        }
+
+        let shape = (self.shape.0, rhs.shape.1);
+        let size = self.shape.0 * rhs.shape.1;
+        Matrix::<f64>::new(size, shape, data)
+    }
+}

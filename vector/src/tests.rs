@@ -2,7 +2,7 @@
 // all results are compared against those from scipy and/or numpy
 #[cfg(test)]
 mod tests {
-    use crate::{AddInto, EuclideanDistance, Vector, DotMul, AddScalar, MulScalar, SubScalar, DivScalar};
+    use crate::{AddInto, EuclideanDistance, Vector, VectorProduct, AddScalar, MulScalar, SubScalar, DivScalar};
     use std::ops::{Add, Sub, Mul, Div};
 
     #[test]
@@ -135,4 +135,13 @@ mod tests {
         let tgt = Vector::new(3, vec![1., 1., 1.]);
         assert_eq!(res, tgt);
     }
+
+    // #[test]
+    // fn test_vector_dot_mul_i8_f64() {
+    //     let v1: Vector<i8> = Vector::new(3, vec![1, 0, 0]);
+    //     let v2: Vector<f64> = Vector::new(3, vec![0., 1., 0.]);
+    //     let res = v1.dot_mul(&v2);
+    //     let tgt = 0.0;
+    //     assert_eq!(res, tgt);
+    // }
 }
