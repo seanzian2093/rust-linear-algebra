@@ -2,7 +2,7 @@
 // all results are compared against those from scipy and/or numpy
 #[cfg(test)]
 mod tests {
-    use crate::{AddInto, EuclideanDistance, Vector, DotMul, AddScalar};
+    use crate::{AddInto, EuclideanDistance, Vector, DotMul, AddScalar, MulScalar, SubScalar, DivScalar};
     use std::ops::{Add, Sub, Mul, Div};
 
     #[test]
@@ -43,7 +43,7 @@ mod tests {
     }
 
     #[test]
-    fn test_vector_add_i16_i16() {
+    fn test_vector_add_into() {
         let v1: Vector<i16> = Vector::new(3, vec![1, 0, 0]);
         let v2: Vector<i16> = Vector::new(3, vec![0, 1, 0]);
         let sum = v1.add_into(&v2);
@@ -106,6 +106,33 @@ mod tests {
         let s = 2.2;
         let res = v1.add_scalar(s);
         let tgt = Vector::new(3, vec![4.2, 4.2, 4.2]);
+        assert_eq!(res, tgt);
+    }
+
+    #[test]
+    fn test_vector_mul_scalar() {
+        let v1: Vector<i8> = Vector::new(3, vec![2, 2, 2]);
+        let s = 2.2;
+        let res = v1.mul_scalar(s);
+        let tgt = Vector::new(3, vec![4.4, 4.4, 4.4]);
+        assert_eq!(res, tgt);
+    }
+
+    #[test]
+    fn test_vector_sub_scalar() {
+        let v1: Vector<i8> = Vector::new(3, vec![2, 2, 2]);
+        let s = 2.0;
+        let res = v1.sub_scalar(s);
+        let tgt = Vector::new(3, vec![0., 0., 0.]);
+        assert_eq!(res, tgt);
+    }
+
+    #[test]
+    fn test_vector_div_scalar() {
+        let v1: Vector<i8> = Vector::new(3, vec![2, 2, 2]);
+        let s = 2.0;
+        let res = v1.div_scalar(s);
+        let tgt = Vector::new(3, vec![1., 1., 1.]);
         assert_eq!(res, tgt);
     }
 }

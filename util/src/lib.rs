@@ -32,6 +32,7 @@ pub enum BiOpsF64 {
 
 /// A binary operations between Vec<f64> and Vec<f64>
 pub fn bi_op_f64(lhs: Vec<f64>, rhs: Vec<f64>, op: BiOpsF64) -> Vec<f64> {
+    assert_eq!(lhs.len(), rhs.len(), "lhs and rhs should have the same length but got {} and {}", lhs.len(), rhs.len());
     let op = match op {
         BiOpsF64::AddF64 => add_f64,
         BiOpsF64::SubF64 => sub_f64,
@@ -94,5 +95,11 @@ mod tests {
         let result = op_scalar_f64(vec![1.0, 2.0, 3.0], 1.0, BiOpsF64::AddF64);
         let tgt = vec![2.0, 3.0, 4.0];
         assert_eq!(result, tgt);
+    }
+
+    #[test]
+    #[should_panic]
+    fn test_bi_op_f64_panic() {
+        let result = bi_op_f64(vec![1.0, 2.0, 3.0], vec![1.0], BiOpsF64::AddF64);
     }
 }

@@ -157,3 +157,123 @@ where
         Matrix::new(self.size, self.shape, data)
     }
 }
+
+/// Implement mul operation between a `scalar` and a `Matrix<T>`
+impl<T, U> MulScalar<U> for Matrix<T>
+where
+    f64: From<T>,
+    T: Clone,
+    f64: From<U>,
+    U: Clone,
+{
+    type Output = Matrix<f64>;
+    fn mul_scalar(&self, scalar: U) -> Self::Output {
+        let self_data_f64 = self.data_to_f64();
+        let data = op_scalar_f64(self_data_f64, scalar, BiOpsF64::MulF64);
+
+        Matrix::new(self.size, self.shape, data)
+    }
+}
+
+/// Implement sub operation between a `scalar` and a `Matrix<T>`
+impl<T, U> SubScalar<U> for Matrix<T>
+where
+    f64: From<T>,
+    T: Clone,
+    f64: From<U>,
+    U: Clone,
+{
+    type Output = Matrix<f64>;
+    fn sub_scalar(&self, scalar: U) -> Self::Output {
+        let self_data_f64 = self.data_to_f64();
+        let data = op_scalar_f64(self_data_f64, scalar, BiOpsF64::SubF64);
+
+        Matrix::new(self.size, self.shape, data)
+    }
+}
+
+/// Implement div operation between a `scalar` and a `Matrix<T>`
+impl<T, U> DivScalar<U> for Matrix<T>
+where
+    f64: From<T>,
+    T: Clone,
+    f64: From<U>,
+    U: Clone,
+{
+    type Output = Matrix<f64>;
+    fn div_scalar(&self, scalar: U) -> Self::Output {
+        let self_data_f64 = self.data_to_f64();
+        let data = op_scalar_f64(self_data_f64, scalar, BiOpsF64::DivF64);
+
+        Matrix::new(self.size, self.shape, data)
+    }
+}
+
+/// Implement the in std::ops::Add
+impl<T: std::ops::Add<Output = T>> std::ops::Add for Matrix<T>
+where
+    f64: From<T>,
+    T: Clone,
+{
+    type Output = Matrix<f64>;
+
+    fn add(self, other: Self) -> Self::Output {
+        let other_data_f64 = other.data_to_f64();
+        let self_data_f64 = self.data_to_f64();
+
+        let data = bi_op_f64(self_data_f64, other_data_f64, BiOpsF64::AddF64);
+        Matrix::<f64>::new(self.size, self.shape, data)
+    }
+}
+
+/// Implement the std::ops::Sub
+impl<T: std::ops::Sub<Output = T>> std::ops::Sub for Matrix<T>
+where
+    f64: From<T>,
+    T: Clone,
+{
+    type Output = Matrix<f64>;
+
+    fn sub(self, other: Self) -> Self::Output {
+        let other_data_f64 = other.data_to_f64();
+        let self_data_f64 = self.data_to_f64();
+
+        let data = bi_op_f64(self_data_f64, other_data_f64, BiOpsF64::SubF64);
+        Matrix::<f64>::new(self.size, self.shape, data)
+    }
+}
+
+/// Implement the std::ops::Div
+impl<T: std::ops::Div<Output = T>> std::ops::Div for Matrix<T>
+where
+    f64: From<T>,
+    T: Clone,
+{
+    type Output = Matrix<f64>;
+
+    fn div(self, other: Self) -> Self::Output {
+        let other_data_f64 = other.data_to_f64();
+        let self_data_f64 = self.data_to_f64();
+
+        let data = bi_op_f64(self_data_f64, other_data_f64, BiOpsF64::DivF64);
+        Matrix::<f64>::new(self.size, self.shape, data)
+    }
+}
+
+/// Implement the std::ops::Mul
+impl<T: std::ops::Mul<Output = T>> std::ops::Mul for Matrix<T>
+where
+    f64: From<T>,
+    T: Clone,
+{
+    type Output = Matrix<f64>;
+
+    fn mul(self, other: Self) -> Self::Output {
+        let other_data_f64 = other.data_to_f64();
+        let self_data_f64 = self.data_to_f64();
+
+        let data = bi_op_f64(self_data_f64, other_data_f64, BiOpsF64::MulF64);
+        Matrix::<f64>::new(self.size, self.shape, data)
+    }
+}
+

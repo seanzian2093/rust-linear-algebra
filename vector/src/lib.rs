@@ -78,8 +78,7 @@ where
     f64: From<T>,
     T: Clone,
 {
-    type Rhs = Vector<T>;
-    fn euclidean_distance(&self, other: &Self::Rhs) -> f64 {
+    fn euclidean_distance(&self, other: &Self) -> f64 {
         let other_data_f64 = other.data_to_f64();
         let self_data_f64 = self.data_to_f64();
 
@@ -99,9 +98,9 @@ where
     f64: From<T>,
     T: Clone,
 {
-    type Rhs = Vector<T>;
+    // type Rhs = Vector<T>;
     type Output = Vector<f64>;
-    fn add_into(&self, other: &Self::Rhs) -> Self::Output {
+    fn add_into(&self, other: &Self) -> Self::Output {
         let other_data_f64 = other.data_to_f64();
         let self_data_f64 = self.data_to_f64();
         let data = bi_op_f64(self_data_f64, other_data_f64, BiOpsF64::AddF64);
@@ -126,6 +125,7 @@ where
     }
 }
 
+/// Implement add operation between a `scalar` and a `vector<T>`
 impl<T, U> AddScalar<U> for Vector<T>
 where
     f64: From<T>,
@@ -137,6 +137,57 @@ where
     fn add_scalar(&self, scalar: U) -> Self::Output {
         let self_data_f64 = self.data_to_f64();
         let data = op_scalar_f64(self_data_f64, scalar, BiOpsF64::AddF64);
+
+        Vector::<f64>::new(self.size, data)
+    }
+}
+
+/// Implement mul operation between a `scalar` and a `vector<T>`
+impl<T, U> MulScalar<U> for Vector<T>
+where
+    f64: From<T>,
+    T: Clone,
+    f64: From<U>,
+    U: Clone,
+{
+    type Output = Vector<f64>;
+    fn mul_scalar(&self, scalar: U) -> Self::Output {
+        let self_data_f64 = self.data_to_f64();
+        let data = op_scalar_f64(self_data_f64, scalar, BiOpsF64::MulF64);
+
+        Vector::<f64>::new(self.size, data)
+    }
+}
+
+/// Implement sub operation between a `scalar` and a `vector<T>`
+impl<T, U> SubScalar<U> for Vector<T>
+where
+    f64: From<T>,
+    T: Clone,
+    f64: From<U>,
+    U: Clone,
+{
+    type Output = Vector<f64>;
+    fn sub_scalar(&self, scalar: U) -> Self::Output {
+        let self_data_f64 = self.data_to_f64();
+        let data = op_scalar_f64(self_data_f64, scalar, BiOpsF64::SubF64);
+
+        Vector::<f64>::new(self.size, data)
+    }
+}
+
+/// Implement div operation between a `scalar` and a `vector<T>`
+impl<T, U> DivScalar<U> for Vector<T>
+where
+    f64: From<T>,
+    T: Clone,
+    f64: From<U>,
+    U: Clone,
+{
+    type Output = Vector<f64>;
+    fn div_scalar(&self, scalar: U) -> Self::Output {
+        let self_data_f64 = self.data_to_f64();
+        let data = op_scalar_f64(self_data_f64, scalar, BiOpsF64::DivF64);
 
         Vector::<f64>::new(self.size, data)
     }

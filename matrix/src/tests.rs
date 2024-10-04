@@ -1,9 +1,8 @@
 // This tests mod is within src so is considered unittest
 #[cfg(test)]
 mod tests {
-    use vector::Vector;
-    use util::*;
-    use crate::Matrix;
+    use crate::{Matrix, Vector, AddScalar, MulScalar, SubScalar, DivScalar};
+    use std::ops::{Add, Sub, Mul, Div};
     #[test]
     fn test_matrix_new() {
         let data = vec![1, 2, 3, 4, 5, 6];
@@ -60,6 +59,129 @@ mod tests {
             Vector::new(2, vec![3.,4.]),
             Vector::new(2, vec![5.,6.]),
             Vector::new(2, vec![7.,8.]),
+        ];
+
+        assert_eq!(res.get_rows(), tgt);
+    }
+
+    #[test]
+    fn test_matrix_mul_scalar() {
+        let data = vec![1, 2, 3, 4, 5, 6];
+        let size = 6;
+        let shape = (3, 2);
+        let m = Matrix::new(size, shape, data);
+
+        let res = m.mul_scalar(2);
+        let tgt = vec![
+            Vector::new(2, vec![2., 4.]),
+            Vector::new(2, vec![6., 8.]),
+            Vector::new(2, vec![10., 12.]),
+        ];
+
+        assert_eq!(res.get_rows(), tgt);
+    }
+
+    #[test]
+    fn test_matrix_sub_scalar() {
+        let data = vec![1, 2, 3, 4, 5, 6];
+        let size = 6;
+        let shape = (3, 2);
+        let m = Matrix::new(size, shape, data);
+
+        let res = m.sub_scalar(1);
+        let tgt = vec![
+            Vector::new(2, vec![0., 1.]),
+            Vector::new(2, vec![2., 3.]),
+            Vector::new(2, vec![4., 5.]),
+        ];
+
+        assert_eq!(res.get_rows(), tgt);
+    }
+
+    #[test]
+    fn test_matrix_div_scalar() {
+        let data = vec![1, 2, 3, 4, 5, 6];
+        let size = 6;
+        let shape = (3, 2);
+        let m = Matrix::new(size, shape, data);
+
+        let res = m.div_scalar(0.5);
+        let tgt = vec![
+            Vector::new(2, vec![2., 4.]),
+            Vector::new(2, vec![6., 8.]),
+            Vector::new(2, vec![10., 12.]),
+        ];
+
+        assert_eq!(res.get_rows(), tgt);
+    }
+
+    #[test]
+    fn test_matrix_add() {
+        let data = vec![1, 2, 3, 4, 5, 6];
+        let size = 6;
+        let shape = (3, 2);
+        let m = Matrix::new(size, shape, data);
+        let m2 = m.clone();
+
+        let res = m.add(m2);
+        let tgt = vec![
+            Vector::new(2, vec![2.,4.]),
+            Vector::new(2, vec![6.,8.]),
+            Vector::new(2, vec![10.,12.]),
+        ];
+
+        assert_eq!(res.get_rows(), tgt);
+    }
+
+    #[test]
+    fn test_matrix_sub() {
+        let data = vec![1, 2, 3, 4, 5, 6];
+        let size = 6;
+        let shape = (3, 2);
+        let m = Matrix::new(size, shape, data);
+        let m2 = m.clone();
+
+        let res = m.sub(m2);
+        let tgt = vec![
+            Vector::new(2, vec![0.,0.]),
+            Vector::new(2, vec![0.,0.]),
+            Vector::new(2, vec![0.,0.]),
+        ];
+
+        assert_eq!(res.get_rows(), tgt);
+    }
+
+    #[test]
+    fn test_matrix_div() {
+        let data = vec![1, 2, 3, 4, 5, 6];
+        let size = 6;
+        let shape = (3, 2);
+        let m = Matrix::new(size, shape, data);
+        let m2 = m.clone();
+
+        let res = m.div(m2);
+        let tgt = vec![
+            Vector::new(2, vec![1.,1.]),
+            Vector::new(2, vec![1.,1.]),
+            Vector::new(2, vec![1.,1.]),
+        ];
+
+        assert_eq!(res.get_rows(), tgt);
+    }
+
+    #[test]
+    fn test_matrix_mul() {
+        let data = vec![1, 2, 3, 4, 5, 6];
+        let size = 6;
+        let shape = (3, 2);
+        let m = Matrix::new(size, shape, data);
+        let m2 = m.clone();
+
+        let res = m.mul(m2);
+        let tgt = vec![
+            Vector::new(2, vec![1.,4.]),
+            Vector::new(2, vec![9.,16.]),
+            Vector::new(2, vec![25.,36.]),
         ];
 
         assert_eq!(res.get_rows(), tgt);
