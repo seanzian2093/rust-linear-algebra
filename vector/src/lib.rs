@@ -1,22 +1,20 @@
-// use std::fmt::{write, Debug, Display};
-// use std::ops::{Add, Sub};
 /// # Vector
 // import tests to here, as if the mod tests was written here
 use util::*;
 mod tests;
 
-// Definition
-#[derive(Debug, Clone)]
+/// Definition of Vector
+#[derive(Debug, Clone, PartialEq)]
 pub struct Vector<T>
 where
     f64: From<T>,
     T: Clone,
 {
-    size: u32,
+    size: usize,
     data: Vec<T>,
 }
 
-// Implement Display
+/// Implement Display
 
 impl<T> std::fmt::Display for Vector<T>
 where
@@ -34,13 +32,27 @@ where
     f64: From<T>,
     T: Clone,
 {
-    pub fn new(size: u32, data: Vec<T>) -> Self {
+    ///
+    ///
+    /// # Arguments
+    ///
+    /// * `size`:
+    /// * `data`:
+    ///
+    /// returns: Vector<T>
+    ///
+    /// # Examples
+    ///
+    /// ```
+    ///
+    /// ```
+    pub fn new(size: usize, data: Vec<T>) -> Self {
         assert_eq!(
             size,
-            data.len() as u32,
+            data.len(),
             "size and shape do not match - {} vs {:?}",
             size,
-            data.len() as u32,
+            data.len(),
         );
         Vector { size, data }
     }
@@ -50,23 +62,15 @@ where
         data
     }
 
-    // return data as a Vec<f64>
+    /// return data as a Vec<f64>
     pub fn get_data(&self) -> Vec<f64> {
         self.data_to_f64()
     }
 
-    // norm
+    /// norm
     pub fn norm(&self) -> f64 {
-        let norm: f64 = self.data_to_f64().iter().map(|i| i.powf(2.0)).sum();
-        norm.sqrt()
+        self.data_to_f64().iter().fold(0.0, |acc, &x| acc + x * x).sqrt()
     }
-}
-
-pub trait EuclideanDistance {
-    // we are going to calculate euclidean distance of Self and other Vector<T>
-    // use type B to represent generically the other Vector<T>;
-    type B;
-    fn euclidean_distance(&self, _: &Self::B) -> f64;
 }
 
 impl<T> EuclideanDistance for Vector<T>
@@ -74,8 +78,8 @@ where
     f64: From<T>,
     T: Clone,
 {
-    type B = Vector<T>;
-    fn euclidean_distance(&self, other: &Vector<T>) -> f64 {
+    type Rhs = Vector<T>;
+    fn euclidean_distance(&self, other: &Self::Rhs) -> f64 {
         let other_data_f64 = other.data_to_f64();
         let self_data_f64 = self.data_to_f64();
 
@@ -88,36 +92,24 @@ where
     }
 }
 
-// Borrow and operate
-trait AddInto {
-    // whatever type B and caller type are, the sum type is Vector<f64>
-    // - f64 cannot convert back to some other types easily, losslessly, e.g. i32
-    // - we could implement ourself but too tedious.
-    // - let user handle from here
-    type B;
-    fn add_into(&self, _: &Self::B) -> Vector<f64>;
-}
+/// Borrow and add
 
 impl<T> AddInto for Vector<T>
 where
     f64: From<T>,
     T: Clone,
 {
-    type B = Vector<T>;
-    fn add_into(&self, other: &Vector<T>) -> Vector<f64> {
+    type Rhs = Vector<T>;
+    type Output = Vector<f64>;
+    fn add_into(&self, other: &Self::Rhs) -> Self::Output {
         let other_data_f64 = other.data_to_f64();
         let self_data_f64 = self.data_to_f64();
-
         let data = bi_op_f64(self_data_f64, other_data_f64, BiOpsF64::AddF64);
-
-        Vector::<f64> {
-            size: self.size,
-            data,
-        }
+        Vector::<f64>::new(self.size, data)
     }
 }
 
-// implement the Add trait in std::ops
+/// Implement the Add trait in std::ops
 impl<T: std::ops::Add<Output = T>> std::ops::Add for Vector<T>
 where
     f64: From<T>,
@@ -131,5 +123,80 @@ where
 
         let data = bi_op_f64(self_data_f64, other_data_f64, BiOpsF64::AddF64);
         Vector::<f64>::new(self.size, data)
+    }
+}
+
+impl<T, U> AddScalar<U> for Vector<T>
+where
+    f64: From<T>,
+    T: Clone,
+    f64: From<U>,
+    U: Clone,
+{
+    type Output = Vector<f64>;
+    fn add_scalar(&self, scalar: U) -> Self::Output {
+        let self_data_f64 = self.data_to_f64();
+        let data = op_scalar_f64(self_data_f64, scalar, BiOpsF64::AddF64);
+
+        Vector::<f64>::new(self.size, data)
+    }
+}
+
+/// Implement the Sub trait in std::ops
+impl<T: std::ops::Sub<Output = T>> std::ops::Sub for Vector<T>
+where
+    f64: From<T>,
+    T: Clone,
+{
+    type Output = Vector<f64>;
+    fn sub(self, other: Self) -> Self::Output {
+        let other_data_f64 = other.data_to_f64();
+        let self_data_f64 = self.data_to_f64();
+        let data = bi_op_f64(self_data_f64, other_data_f64, BiOpsF64::SubF64);
+        Vector::<f64>::new(self.size, data)
+    }
+}
+
+/// Implement Mul trait in std::ops
+impl<T: std::ops::Mul<Output = T>> std::ops::Mul for Vector<T>
+where
+    f64: From<T>,
+    T: Clone,
+{
+    type Output = Vector<f64>;
+    fn mul(self, other: Self) -> Self::Output {
+        let other_data_f64 = other.data_to_f64();
+        let self_data_f64 = self.data_to_f64();
+        let data=bi_op_f64(self_data_f64, other_data_f64, BiOpsF64::MulF64);
+        Vector::<f64>::new(self.size, data)
+    }
+}
+
+/// Implement std::ops::Dvi
+impl<T: std::ops::Div<Output = T>> std::ops::Div for Vector<T>
+where
+    f64: From<T>,
+    T: Clone,
+{
+    type Output = Vector<f64>;
+    fn div(self, rhs: Self) -> Self::Output {
+        let other_data_f64 = rhs.data_to_f64();
+        let self_data_f64 = self.data_to_f64();
+        let data = bi_op_f64(self_data_f64, other_data_f64, BiOpsF64::DivF64);
+        Vector::<f64>::new(self.size, data)
+    }
+}
+
+impl<T> DotMul for Vector<T>
+where
+    f64: From<T>,
+    T: Clone,
+{
+    type Rhs= Vector<T>;
+    fn dot_mul(&self, other: &Self::Rhs) -> f64 {
+        let other_data_f64 = other.data_to_f64();
+        let self_data_f64 = self.data_to_f64();
+        let data=bi_op_f64(self_data_f64, other_data_f64, BiOpsF64::MulF64).into_iter().sum::<f64>();
+        data
     }
 }
